@@ -1,13 +1,16 @@
 # ---------------------------- IMPORTS ------------------------------- #
 # Allows you to read the .env file
+from venv import create
 from wsgiref import headers
 
 from dotenv import load_dotenv
 import os
 import asyncio
 import httpx
+import json
 # ---------------------------- CONSTANTS ------------------------------- #
-# load_dotenv()
+load_dotenv()
+PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS = json.loads(os.getenv("PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS"))
 # ---------------------------- GLOBAL VARIABLES ------------------------------- #
 
 # ---------------------------- FUNCTIONS ------------------------------- #
@@ -34,16 +37,15 @@ async def delete_data(client, url, params, payload, header):
     return response.json()
 # MAIN Function
 async def main():
-    urls_with_params_payload_headers = [
-        (url, params, payload, headers),
-        (url, params, payload, headers)
-    ]
     async with httpx.AsyncClient() as client:
-        tasks = [get_data(client, url, params, json, headers) for url, params, json, headers in urls_with_params_payload_headers ]
-        # Execute all calls concurrently
+        create_user = post_data(client, PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS["url"], PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS["params"], PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS["payload"], PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS["headers"])
+
+        # tasks = [create_user]
+        # Execute all calls
         try:
             results = await asyncio.gather(*tasks)
         except Exception as e:
             print(e)
         return results
 # ---------------------------- UI SETUP ------------------------------- #
+create_user = asyncio.run(main())
