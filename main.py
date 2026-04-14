@@ -48,7 +48,7 @@ async def main():
             create_graph = await post_data(client, PIXELA_CREATE_GRAPH_POST_REQUEST_COMPONENTS["url"], PIXELA_CREATE_GRAPH_POST_REQUEST_COMPONENTS["params"], PIXELA_CREATE_GRAPH_POST_REQUEST_COMPONENTS["payload"], PIXELA_CREATE_GRAPH_POST_REQUEST_COMPONENTS["headers"])
             if not create_graph["isSuccess"]:
                 mark_graph = await post_data(client, PIXELA_MARK_GRAPH["url"], PIXELA_MARK_GRAPH["params"], PIXELA_MARK_GRAPH["payload"], PIXELA_MARK_GRAPH["headers"] )
-                print(mark_graph)
+                # print(mark_graph)
 
 # ---------------------------- UI SETUP ------------------------------- #
 run_program = asyncio.run(main())
