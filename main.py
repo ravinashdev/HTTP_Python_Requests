@@ -8,9 +8,14 @@ import os
 import asyncio
 import httpx
 import json
+import datetime as dt
 # ---------------------------- CONSTANTS ------------------------------- #
 load_dotenv()
 PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS = json.loads(os.getenv("PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS"))
+PIXELA_CREATE_GRAPH_POST_REQUEST_COMPONENTS = json.loads(os.getenv("PIXELA_CREATE_GRAPH_POST_REQUEST_COMPONENTS"))
+PIXELA_MARK_GRAPH = json.loads(os.getenv("PIXELA_MARK_GRAPH"))
+today = dt.date.today().strftime("%Y-%m-%d")
+print(today)
 # ---------------------------- GLOBAL VARIABLES ------------------------------- #
 
 # ---------------------------- FUNCTIONS ------------------------------- #
@@ -31,21 +36,19 @@ async def put_data(client, url, params, payload, headers):
     print(f"Status Code: {response.status_code}")
     return response.json()
 # POST Request
-async def delete_data(client, url, params, payload, header):
+async def delete_data(client, url, params, payload, headers):
     response = await client.delete(url=url, params=params, json=payload, headers=headers)
     print(f"Status Code: {response.status_code}")
     return response.json()
 # MAIN Function
 async def main():
     async with httpx.AsyncClient() as client:
-        create_user = post_data(client, PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS["url"], PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS["params"], PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS["payload"], PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS["headers"])
+        create_user = await post_data(client, PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS["url"], PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS["params"], PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS["payload"], PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS["headers"])
+        if not create_user["isSuccess"]:
+            create_graph = await post_data(client, PIXELA_CREATE_GRAPH_POST_REQUEST_COMPONENTS["url"], PIXELA_CREATE_GRAPH_POST_REQUEST_COMPONENTS["params"], PIXELA_CREATE_GRAPH_POST_REQUEST_COMPONENTS["payload"], PIXELA_CREATE_GRAPH_POST_REQUEST_COMPONENTS["headers"])
+            if not create_graph["isSuccess"]:
+                mark_graph = await post_data(client, PIXELA_MARK_GRAPH["url"], PIXELA_MARK_GRAPH["params"], PIXELA_MARK_GRAPH["payload"], PIXELA_MARK_GRAPH["headers"] )
+                print(mark_graph)
 
-        # tasks = [create_user]
-        # Execute all calls
-        try:
-            results = await asyncio.gather(*tasks)
-        except Exception as e:
-            print(e)
-        return results
 # ---------------------------- UI SETUP ------------------------------- #
-create_user = asyncio.run(main())
+run_program = asyncio.run(main())
