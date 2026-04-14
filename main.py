@@ -14,7 +14,7 @@ load_dotenv()
 PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS = json.loads(os.getenv("PIXELA_CREATE_USER_POST_REQUEST_COMPONENTS"))
 PIXELA_CREATE_GRAPH_POST_REQUEST_COMPONENTS = json.loads(os.getenv("PIXELA_CREATE_GRAPH_POST_REQUEST_COMPONENTS"))
 PIXELA_MARK_GRAPH = json.loads(os.getenv("PIXELA_MARK_GRAPH"))
-today = dt.date.today().strftime("%Y-%m-%d")
+today = dt.date.today().strftime("%Y%m%d")
 print(today)
 # ---------------------------- GLOBAL VARIABLES ------------------------------- #
 
